@@ -1,7 +1,6 @@
 import streamlit as st
 import math
-import matplotlib.pyplot as plt
-import numpy as np
+import plotly.graph_objects as go
 
 # Function to calculate the centripetal force given mass, radius, and velocity
 def calculate_centripetal_force(mass, velocity, radius):
@@ -33,28 +32,49 @@ def calculate_friction(μ_s, normal_force, centripetal_force_required):
         friction = friction_max  # Maximum friction available
     return friction, slipping
 
-# Function to create Free Body Diagram (FBD)
+# Function to create Free Body Diagram (FBD) using Plotly
 def plot_fbd(normal_force, friction, gravitational_force, centripetal_force):
-    fig, ax = plt.subplots(figsize=(6, 6))
-    
-    # Draw forces as arrows
-    ax.arrow(0, 0, 0, gravitational_force, head_width=0.1, head_length=0.1, fc='blue', ec='blue', label="Gravitational Force (mg)")
-    ax.arrow(0, 0, normal_force, 0, head_width=0.1, head_length=0.1, fc='red', ec='red', label="Normal Force (Fn)")
-    ax.arrow(0, 0, -friction, 0, head_width=0.1, head_length=0.1, fc='green', ec='green', label="Friction Force (Ff)")
-    ax.arrow(0, 0, 0, -centripetal_force, head_width=0.1, head_length=0.1, fc='purple', ec='purple', label="Centripetal Force (Fc)")
+    fig = go.Figure()
 
-    ax.set_xlim(-1.5, 1.5)
-    ax.set_ylim(-1.5, 1.5)
-    ax.set_aspect('equal', adjustable='box')
+    # Gravitational force (mg)
+    fig.add_trace(go.Scatter(
+        x=[0, 0], y=[0, -gravitational_force], mode='lines+text',
+        line=dict(color='blue', width=4),
+        text=["mg"], textposition="top center", name="Gravitational Force"
+    ))
 
-    ax.set_title('Free Body Diagram')
-    ax.legend()
+    # Normal force (Fn)
+    fig.add_trace(go.Scatter(
+        x=[0, normal_force], y=[0, 0], mode='lines+text',
+        line=dict(color='red', width=4),
+        text=["Fn"], textposition="top center", name="Normal Force"
+    ))
 
-    # Turn off axes
-    ax.axis('off')
+    # Frictional force (Ff)
+    fig.add_trace(go.Scatter(
+        x=[0, -friction], y=[0, 0], mode='lines+text',
+        line=dict(color='green', width=4),
+        text=["Ff"], textposition="bottom center", name="Friction Force"
+    ))
 
-    # Display the diagram
-    st.pyplot(fig)
+    # Centripetal force (Fc)
+    fig.add_trace(go.Scatter(
+        x=[0, 0], y=[0, -centripetal_force], mode='lines+text',
+        line=dict(color='purple', width=4),
+        text=["Fc"], textposition="bottom center", name="Centripetal Force"
+    ))
+
+    fig.update_layout(
+        title="Free Body Diagram",
+        xaxis=dict(showgrid=False, zeroline=False),
+        yaxis=dict(showgrid=False, zeroline=False),
+        showlegend=True,
+        height=500,
+        width=500
+    )
+
+    # Show the figure in Streamlit
+    st.plotly_chart(fig)
 
 # Streamlit UI
 st.title("Car on Banked Curve Problem Solver with Friction")
