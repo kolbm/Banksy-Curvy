@@ -6,8 +6,20 @@ def calculate_centripetal_force(mass, velocity, radius):
     return mass * velocity**2 / radius
 
 # Function to calculate the normal force
-def calculate_normal_force(mass, angle, gravitational_force, centripetal_force):
-    normal_force = mass * 10 * math.cos(angle) + centripetal_force
+def calculate_normal_force(mass, angle_deg, gravitational_acceleration=10):
+    """
+    Calculate the normal force on a frictionless banked curve.
+
+    Parameters:
+    mass (float): Mass of the car (kg)
+    angle_deg (float): Banking angle of the curve (degrees)
+    gravitational_acceleration (float): Gravitational acceleration (default is 10 m/s^2)
+
+    Returns:
+    float: Normal force (N)
+    """
+    angle_rad = math.radians(angle_deg)
+    normal_force = mass * gravitational_acceleration / math.cos(angle_rad)
     return normal_force
 
 # Function to calculate the velocity given the centripetal force
