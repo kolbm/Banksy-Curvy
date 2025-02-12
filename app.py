@@ -74,7 +74,7 @@ if calculation_option == "Centripetal Force":
 elif calculation_option == "Normal Force":
     if st.button("Calculate Normal Force"):
         gravitational_force = mass * 10  # Assume g = 10 m/s^2
-        result = calculate_normal_force(mass, angle_deg, gravitational_acceleration=10)
+        result = calculate_normal_force(mass, angle, gravitational_acceleration=10)
         st.write(f"The normal force is: {result:.2f} N")
 
 elif calculation_option == "Velocity":
