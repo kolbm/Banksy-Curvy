@@ -43,6 +43,9 @@ centripetal_force = st.sidebar.number_input("Centripetal Force (N)", min_value=1
 angle = st.sidebar.number_input("Angle of the banked curve (degrees)", min_value=0.0, max_value=90.0, value=30.0)
 coefficient_of_friction = st.sidebar.number_input("Coefficient of Static Friction (μ_s)", min_value=0.0, value=0.5)
 
+# Checkbox to toggle friction input
+use_friction = st.sidebar.checkbox("Include Friction in Calculations", value=False)
+
 # Convert angle from degrees to radians for calculation
 angle_rad = math.radians(angle)
 
@@ -73,13 +76,16 @@ elif calculation_option == "Angle":
         st.write(f"The angle of the banked curve is: {math.degrees(result):.2f} degrees")
 
 elif calculation_option == "Friction":
-    if st.button("Calculate Friction and Check for Slipping"):
-        normal_force = calculate_normal_force(mass, angle_rad, mass * 10, centripetal_force)
-        centripetal_force_required = calculate_centripetal_force(mass, velocity, radius)
-        friction, slipping = calculate_friction(coefficient_of_friction, normal_force, centripetal_force_required)
-        
-        st.write(f"Frictional Force: {friction:.2f} N")
-        if slipping:
-            st.write("The car is slipping! The frictional force is not enough to provide the required centripetal force.")
-        else:
-            st.write("No slipping. The frictional force is enough to provide the required centripetal force.")
+    if use_friction:
+        if st.button("Calculate Friction and Check for Slipping"):
+            normal_force = calculate_normal_force(mass, angle_rad, mass * 10, centripetal_force)
+            centripetal_force_required = calculate_centripetal_force(mass, velocity, radius)
+            friction, slipping = calculate_friction(coefficient_of_friction, normal_force, centripetal_force_required)
+            
+            st.write(f"Frictional Force: {friction:.2f} N")
+            if slipping:
+                st.write("The car is slipping! The frictional force is not enough to provide the required centripetal force.")
+            else:
+                st.write("No slipping. The frictional force is enough to provide the required centripetal force.")
+    else:
+        st.write("Friction is not included in the calculations.")
