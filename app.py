@@ -1,5 +1,7 @@
 import streamlit as st
 import math
+import matplotlib.pyplot as plt
+import numpy as np
 
 # Function to calculate the centripetal force given mass, radius, and velocity
 def calculate_centripetal_force(mass, velocity, radius):
@@ -30,6 +32,29 @@ def calculate_friction(μ_s, normal_force, centripetal_force_required):
         slipping = True
         friction = friction_max  # Maximum friction available
     return friction, slipping
+
+# Function to create Free Body Diagram (FBD)
+def plot_fbd(normal_force, friction, gravitational_force, centripetal_force):
+    fig, ax = plt.subplots(figsize=(6, 6))
+    
+    # Draw forces as arrows
+    ax.arrow(0, 0, 0, gravitational_force, head_width=0.1, head_length=0.1, fc='blue', ec='blue', label="Gravitational Force (mg)")
+    ax.arrow(0, 0, normal_force, 0, head_width=0.1, head_length=0.1, fc='red', ec='red', label="Normal Force (Fn)")
+    ax.arrow(0, 0, -friction, 0, head_width=0.1, head_length=0.1, fc='green', ec='green', label="Friction Force (Ff)")
+    ax.arrow(0, 0, 0, -centripetal_force, head_width=0.1, head_length=0.1, fc='purple', ec='purple', label="Centripetal Force (Fc)")
+
+    ax.set_xlim(-1.5, 1.5)
+    ax.set_ylim(-1.5, 1.5)
+    ax.set_aspect('equal', adjustable='box')
+
+    ax.set_title('Free Body Diagram')
+    ax.legend()
+
+    # Turn off axes
+    ax.axis('off')
+
+    # Display the diagram
+    st.pyplot(fig)
 
 # Streamlit UI
 st.title("Car on Banked Curve Problem Solver with Friction")
@@ -90,12 +115,11 @@ elif calculation_option == "Friction":
     else:
         st.write("Friction is not included in the calculations.")
 
-# Display diagram when friction is not included
-if not use_friction:
-    st.subheader("Banked Curve with No Friction")
-    st.image("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQwr--617E15yi1wU_dCDJuvw-JrEnbg2GFmA&s", caption="Banked Curve Diagram", width=400)
-
-# Display different diagram when friction is included
-if use_friction:
-    st.subheader("Banked Curve with Friction")
-    st.image("https://i.ytimg.com/vi/35KcguGfIEY/maxresdefault.jpg", caption="Banked Curve with Friction", width=400)
+# Display Free Body Diagram (FBD)
+if st.button("Display Free Body Diagram"):
+    gravitational_force = mass * 10  # Gravitational force
+    normal_force = calculate_normal_force(mass, angle_rad, mass * 10, centripetal_force)
+    centripetal_force_required = calculate_centripetal_force(mass, velocity, radius)
+    friction, _ = calculate_friction(coefficient_of_friction, normal_force, centripetal_force_required)
+    
+    plot_fbd(normal_force, friction, gravitational_force, centripetal_force_required)
