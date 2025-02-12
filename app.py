@@ -89,3 +89,8 @@ elif calculation_option == "Friction":
                 st.write("No slipping. The frictional force is enough to provide the required centripetal force.")
     else:
         st.write("Friction is not included in the calculations.")
+
+# Display diagram when friction is not included
+if not use_friction:
+    st.subheader("Banked Curve with No Friction")
+    st.image("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQwr--617E15yi1wU_dCDJuvw-JrEnbg2GFmA&s", caption="Banked Curve Diagram", use_column_width=True)
