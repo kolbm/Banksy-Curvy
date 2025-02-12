@@ -93,4 +93,9 @@ elif calculation_option == "Friction":
 # Display diagram when friction is not included
 if not use_friction:
     st.subheader("Banked Curve with No Friction")
-    st.image("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQwr--617E15yi1wU_dCDJuvw-JrEnbg2GFmA&s", caption="Banked Curve Diagram", use_column_width=True)
+    st.image("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQwr--617E15yi1wU_dCDJuvw-JrEnbg2GFmA&s", caption="Banked Curve Diagram", width=400)
+
+# Display different diagram when friction is included
+if use_friction:
+    st.subheader("Banked Curve with Friction")
+    st.image("https://i.ytimg.com/vi/35KcguGfIEY/maxresdefault.jpg", caption="Banked Curve with Friction", width=400)
