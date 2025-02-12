@@ -20,8 +20,19 @@ def calculate_angle(centripetal_force, mass, radius):
     angle = math.atan(centripetal_force / (mass * g))
     return angle
 
+# Function to calculate the frictional force and check if slipping occurs
+def calculate_friction(μ_s, normal_force, centripetal_force_required):
+    friction_max = μ_s * normal_force
+    if friction_max >= centripetal_force_required:
+        slipping = False
+        friction = centripetal_force_required  # Friction needed to provide centripetal force
+    else:
+        slipping = True
+        friction = friction_max  # Maximum friction available
+    return friction, slipping
+
 # Streamlit UI
-st.title("Car on Banked Curve Problem Solver")
+st.title("Car on Banked Curve Problem Solver with Friction")
 
 st.sidebar.header("Input Values")
 
@@ -30,13 +41,14 @@ radius = st.sidebar.number_input("Radius of the curve (m)", min_value=1.0, value
 velocity = st.sidebar.number_input("Velocity of the car (m/s)", min_value=1.0, value=30.0)
 centripetal_force = st.sidebar.number_input("Centripetal Force (N)", min_value=1.0, value=5000.0)
 angle = st.sidebar.number_input("Angle of the banked curve (degrees)", min_value=0.0, max_value=90.0, value=30.0)
+coefficient_of_friction = st.sidebar.number_input("Coefficient of Static Friction (μ_s)", min_value=0.0, value=0.5)
 
 # Convert angle from degrees to radians for calculation
 angle_rad = math.radians(angle)
 
 st.sidebar.header("Select What to Calculate:")
 calculation_option = st.sidebar.selectbox(
-    "What would you like to calculate?", ["Centripetal Force", "Normal Force", "Velocity", "Angle"]
+    "What would you like to calculate?", ["Centripetal Force", "Normal Force", "Velocity", "Angle", "Friction"]
 )
 
 if calculation_option == "Centripetal Force":
@@ -60,3 +72,14 @@ elif calculation_option == "Angle":
         result = calculate_angle(centripetal_force, mass, radius)
         st.write(f"The angle of the banked curve is: {math.degrees(result):.2f} degrees")
 
+elif calculation_option == "Friction":
+    if st.button("Calculate Friction and Check for Slipping"):
+        normal_force = calculate_normal_force(mass, angle_rad, mass * 10, centripetal_force)
+        centripetal_force_required = calculate_centripetal_force(mass, velocity, radius)
+        friction, slipping = calculate_friction(coefficient_of_friction, normal_force, centripetal_force_required)
+        
+        st.write(f"Frictional Force: {friction:.2f} N")
+        if slipping:
+            st.write("The car is slipping! The frictional force is not enough to provide the required centripetal force.")
+        else:
+            st.write("No slipping. The frictional force is enough to provide the required centripetal force.")
