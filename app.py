@@ -5,10 +5,18 @@ import math
 def calculate_centripetal_force(mass, velocity, radius):
     return mass * velocity**2 / radius
 
+# Function to calculate centripetal acceleration
+def calculate_centripetal_acceleration(velocity, radius):
+    return velocity**2 / radius
+
 # Function to calculate normal force for a banked curve
 def calculate_normal_force(mass, angle_deg, gravitational_acceleration=10):
     angle_rad = math.radians(angle_deg)
     return mass * gravitational_acceleration / math.cos(angle_rad)
+
+# Function to calculate gravitational force
+def calculate_gravitational_force(mass, gravitational_acceleration=10):
+    return mass * gravitational_acceleration
 
 # Function to calculate required friction force
 def calculate_friction(μ_s, normal_force, centripetal_force_required):
@@ -27,48 +35,56 @@ case_option = st.sidebar.selectbox(
     ["Banked without Friction (μ = 0, θ ≠ 0)", "Banked with Friction (μ ≠ 0, θ ≠ 0)", "Unbanked with Friction (μ ≠ 0, θ = 0)"]
 )
 
-# Input fields common to all cases
+# Common inputs for all cases
 mass = st.sidebar.number_input("Mass of the car (kg)", min_value=0.1, value=1000.0)
 radius = st.sidebar.number_input("Radius of the curve (m)", min_value=1.0, value=50.0)
 velocity = st.sidebar.number_input("Velocity of the car (m/s)", min_value=1.0, value=30.0)
 
-if "Banked" in case_option:
-    angle = st.sidebar.number_input("Angle of the banked curve (degrees)", min_value=0.0, max_value=90.0, value=30.0)
-if "Friction" in case_option:
-    coefficient_of_friction = st.sidebar.number_input("Coefficient of Static Friction (μ_s)", min_value=0.0, value=0.5)
-
-# Display results based on selected case
-st.subheader(f"Results for: {case_option}")
-
+# Inputs based on selected case
 if case_option == "Banked without Friction (μ = 0, θ ≠ 0)":
-    st.write("**No friction assumed. Calculations based on centripetal and normal forces only.**")
-    normal_force = calculate_normal_force(mass, angle)
-    centripetal_force = calculate_centripetal_force(mass, velocity, radius)
-    st.write(f"Normal Force: **{normal_force:.2f} N**")
-    st.write(f"Centripetal Force: **{centripetal_force:.2f} N**")
+    angle = st.sidebar.number_input("Angle of the banked curve (degrees)", min_value=0.0, max_value=90.0, value=30.0)
 
 elif case_option == "Banked with Friction (μ ≠ 0, θ ≠ 0)":
-    st.write("**Friction is included in the calculations.**")
-    normal_force = calculate_normal_force(mass, angle)
-    centripetal_force = calculate_centripetal_force(mass, velocity, radius)
-    friction, slipping = calculate_friction(coefficient_of_friction, normal_force, centripetal_force)
-    st.write(f"Normal Force: **{normal_force:.2f} N**")
-    st.write(f"Centripetal Force: **{centripetal_force:.2f} N**")
-    st.write(f"Frictional Force: **{friction:.2f} N**")
-    if slipping:
-        st.write("**The car is slipping! Friction is insufficient.**")
-    else:
-        st.write("**No slipping. Friction is sufficient.**")
+    angle = st.sidebar.number_input("Angle of the banked curve (degrees)", min_value=0.0, max_value=90.0, value=30.0)
+    coefficient_of_friction = st.sidebar.number_input("Coefficient of Static Friction (μ_s)", min_value=0.0, value=0.5)
 
 elif case_option == "Unbanked with Friction (μ ≠ 0, θ = 0)":
-    st.write("**Flat curve with friction providing centripetal force.**")
-    normal_force = mass * 10  # Since θ = 0, normal force equals weight
+    coefficient_of_friction = st.sidebar.number_input("Coefficient of Static Friction (μ_s)", min_value=0.0, value=0.5)
+
+# Dropdown to select what to calculate
+calculation_option = st.sidebar.selectbox(
+    "Select What to Calculate:",
+    ["Centripetal Force", "Centripetal Acceleration", "Gravitational Force", "Normal Force"]
+)
+
+# Display results based on selected case and calculation
+st.subheader(f"Results for: {case_option} - {calculation_option}")
+
+if calculation_option == "Centripetal Force":
     centripetal_force = calculate_centripetal_force(mass, velocity, radius)
-    friction, slipping = calculate_friction(coefficient_of_friction, normal_force, centripetal_force)
-    st.write(f"Normal Force: **{normal_force:.2f} N**")
     st.write(f"Centripetal Force: **{centripetal_force:.2f} N**")
-    st.write(f"Frictional Force: **{friction:.2f} N**")
-    if slipping:
-        st.write("**The car is slipping! Friction is insufficient.**")
+
+elif calculation_option == "Centripetal Acceleration":
+    centripetal_acceleration = calculate_centripetal_acceleration(velocity, radius)
+    st.write(f"Centripetal Acceleration: **{centripetal_acceleration:.2f} m/s²**")
+
+elif calculation_option == "Gravitational Force":
+    gravitational_force = calculate_gravitational_force(mass)
+    st.write(f"Gravitational Force: **{gravitational_force:.2f} N**")
+
+elif calculation_option == "Normal Force":
+    if "Banked" in case_option:
+        normal_force = calculate_normal_force(mass, angle)
     else:
-        st.write("**No slipping. Friction is sufficient.**")
+        normal_force = calculate_gravitational_force(mass)  # Normal force equals weight for unbanked
+    st.write(f"Normal Force: **{normal_force:.2f} N**")
+
+# Additional explanation for each case
+if case_option == "Banked without Friction (μ = 0, θ ≠ 0)":
+    st.write("**Note:** No friction is considered in this case. Calculations are based only on centripetal and normal forces.")
+
+elif case_option == "Banked with Friction (μ ≠ 0, θ ≠ 0)":
+    st.write("**Note:** Friction is included in calculations to check for slipping conditions.")
+
+elif case_option == "Unbanked with Friction (μ ≠ 0, θ = 0)":
+    st.write("**Note:** This is a flat curve where friction provides the centripetal force.")
