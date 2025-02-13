@@ -85,7 +85,13 @@ elif calculation_option == "Friction":
             st.write("**The car is slipping!** The frictional force is not enough to provide the required centripetal force.")
         else:
             st.write("**No slipping.** The frictional force is sufficient to provide the required centripetal force.")
+        
+        # Display picture for friction case
+        st.image("https://i.ytimg.com/vi/35KcguGfIEY/maxresdefault.jpg", caption="Banked Curve with Friction", width=400)
+        
     else:
         st.latex(r"\text{No friction included in calculations.}")
         st.write("This is a frictionless scenario. Calculations assume no frictional forces acting on the car.")
-
+        
+        # Display picture for frictionless case
+        st.image("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQwr--617E15yi1wU_dCDJuvw-JrEnbg2GFmA&s", caption="Banked Curve with No Friction", width=400)
