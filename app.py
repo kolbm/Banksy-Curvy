@@ -17,7 +17,7 @@ def calculate_normal_force(mass, angle_deg, gravitational_acceleration=10):
 
     Returns:
     float: Normal force (N)
-    """
+    """ 
     angle_rad = math.radians(angle_deg)
     normal_force = mass * gravitational_acceleration / math.cos(angle_rad)
     return normal_force
