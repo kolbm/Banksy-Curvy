@@ -54,12 +54,12 @@ calculation_option = st.sidebar.selectbox(
 st.subheader(f"Results for: {case_option} - {calculation_option}")
 
 if calculation_option == "Centripetal Force":
-    st.latex(r"F_c = \frac{m v^2}{r}")
+    st.latex(r"F_c = \frac{m {v_T}^2}{r}")
     centripetal_force = calculate_centripetal_force(mass, velocity, radius)
     st.write(f"Centripetal Force: **{centripetal_force:.2f} N**")
 
 elif calculation_option == "Centripetal Acceleration":
-    st.latex(r"a_c = \frac{v^2}{r}")
+    st.latex(r"a_c = \frac{{v_T}^2}{r}")
     centripetal_acceleration = calculate_centripetal_acceleration(velocity, radius)
     st.write(f"Centripetal Acceleration: **{centripetal_acceleration:.2f} m/s²**")
 
