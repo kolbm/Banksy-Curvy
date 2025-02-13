@@ -18,15 +18,8 @@ def calculate_normal_force(mass, angle_deg, gravitational_acceleration=10):
 def calculate_gravitational_force(mass, gravitational_acceleration=10):
     return mass * gravitational_acceleration
 
-# Function to calculate required friction force
-def calculate_friction(μ_s, normal_force, centripetal_force_required):
-    friction_max = μ_s * normal_force
-    slipping = friction_max < centripetal_force_required
-    friction = min(friction_max, centripetal_force_required)
-    return friction, slipping
-
 # Streamlit UI
-st.title("Car on a Curve Problem Solver")
+st.title("Car on a Curve Problem Solver with LaTeX Equations")
 st.sidebar.header("Input Values")
 
 # Dropdown to select the case
@@ -57,25 +50,30 @@ calculation_option = st.sidebar.selectbox(
     ["Centripetal Force", "Centripetal Acceleration", "Gravitational Force", "Normal Force"]
 )
 
-# Display results based on selected case and calculation
+# Display results with LaTeX equations and answers
 st.subheader(f"Results for: {case_option} - {calculation_option}")
 
 if calculation_option == "Centripetal Force":
+    st.latex(r"F_c = \frac{m v^2}{r}")
     centripetal_force = calculate_centripetal_force(mass, velocity, radius)
     st.write(f"Centripetal Force: **{centripetal_force:.2f} N**")
 
 elif calculation_option == "Centripetal Acceleration":
+    st.latex(r"a_c = \frac{v^2}{r}")
     centripetal_acceleration = calculate_centripetal_acceleration(velocity, radius)
     st.write(f"Centripetal Acceleration: **{centripetal_acceleration:.2f} m/s²**")
 
 elif calculation_option == "Gravitational Force":
+    st.latex(r"F_g = m \cdot g")
     gravitational_force = calculate_gravitational_force(mass)
     st.write(f"Gravitational Force: **{gravitational_force:.2f} N**")
 
 elif calculation_option == "Normal Force":
     if "Banked" in case_option:
+        st.latex(r"F_N = \frac{m \cdot g}{\cos(\theta)}")
         normal_force = calculate_normal_force(mass, angle)
     else:
+        st.latex(r"F_N = m \cdot g")
         normal_force = calculate_gravitational_force(mass)  # Normal force equals weight for unbanked
     st.write(f"Normal Force: **{normal_force:.2f} N**")
 
