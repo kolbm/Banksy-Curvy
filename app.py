@@ -27,7 +27,7 @@ def calculate_friction(μ_s, normal_force, centripetal_force_required):
     return friction, slipping
 
 # Streamlit UI
-st.title("Car on a Banked Curve Problem Solver with Friction")
+st.title("Car on a Banked Curve Problem Solver with Friction Option")
 
 st.sidebar.header("Input Values")
 mass = st.sidebar.number_input("Mass of the car (kg)", min_value=0.1, value=1000.0)
@@ -35,6 +35,9 @@ radius = st.sidebar.number_input("Radius of the curve (m)", min_value=1.0, value
 velocity = st.sidebar.number_input("Velocity of the car (m/s)", min_value=1.0, value=30.0)
 angle = st.sidebar.number_input("Angle of the banked curve (degrees)", min_value=0.0, max_value=90.0, value=30.0)
 coefficient_of_friction = st.sidebar.number_input("Coefficient of Static Friction (μ_s)", min_value=0.0, value=0.5)
+
+# Dropdown to include or exclude friction
+friction_option = st.sidebar.selectbox("Include Friction in Calculations?", ["No", "Yes"])
 
 # Select calculation
 st.sidebar.header("Select What to Calculate:")
@@ -70,15 +73,19 @@ elif calculation_option == "Angle":
 
 elif calculation_option == "Friction":
     st.subheader("Friction Calculation")
-    st.latex(r"F_f = \mu_s \cdot F_N")
-    st.latex(r"F_f \geq F_c \quad (\text{No Slipping Condition})")
-    
-    normal_force = calculate_normal_force(mass, angle)
-    centripetal_force_required = calculate_centripetal_force(mass, velocity, radius)
-    friction, slipping = calculate_friction(coefficient_of_friction, normal_force, centripetal_force_required)
-    
-    st.write(f"Frictional Force: **{friction:.2f} N**")
-    if slipping:
-        st.write("**The car is slipping!** The frictional force is not enough to provide the required centripetal force.")
+    if friction_option == "Yes":
+        st.latex(r"F_f = \mu_s \cdot F_N")
+        st.latex(r"F_f \geq F_c \quad (\text{No Slipping Condition})")
+        normal_force = calculate_normal_force(mass, angle)
+        centripetal_force_required = calculate_centripetal_force(mass, velocity, radius)
+        friction, slipping = calculate_friction(coefficient_of_friction, normal_force, centripetal_force_required)
+        
+        st.write(f"Frictional Force: **{friction:.2f} N**")
+        if slipping:
+            st.write("**The car is slipping!** The frictional force is not enough to provide the required centripetal force.")
+        else:
+            st.write("**No slipping.** The frictional force is sufficient to provide the required centripetal force.")
     else:
-        st.write("**No slipping.** The frictional force is sufficient to provide the required centripetal force.")
+        st.latex(r"\text{No friction included in calculations.}")
+        st.write("This is a frictionless scenario. Calculations assume no frictional forces acting on the car.")
+
