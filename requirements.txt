@@ -1,3 +1,2 @@
 streamlit==1.18.0
-plotly==5.15.0
-pandas==1.5.3  # Optional, if you process data
+numpy==1.22.0
